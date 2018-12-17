@@ -1,0 +1,217 @@
+Index: src/main/java/guru/springframework/spring5webapp/model/Book.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/guru/springframework/spring5webapp/model/Book.java	(date 1545050744757)
++++ src/main/java/guru/springframework/spring5webapp/model/Book.java	(date 1545050744757)
+@@ -0,0 +1,102 @@
++package guru.springframework.spring5webapp.model;
++
++import javax.persistence.*;
++import java.util.HashSet;
++import java.util.Objects;
++import java.util.Set;
++
++@Entity
++public class Book {
++    @Id
++    @GeneratedValue(strategy = GenerationType.AUTO)
++    private  Long id;
++    private String title;
++    private String isbn;
++    private String publisher;
++
++    @ManyToMany
++    @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
++    inverseJoinColumns = @JoinColumn(name = "author_id"))
++    private Set<Author> authors = new HashSet<>();
++
++    public Book(){
++
++    }
++
++    public Book(String title, String isbn, String publisher){
++        this.title = title;
++        this.isbn = isbn;
++        this.publisher = publisher;
++    }
++
++    public Book(String title, String isbn, String publisher, Set<Author> authors){
++        this.title = title;
++        this.isbn = isbn;
++        this.publisher = publisher;
++        this.authors = authors;
++    }
++
++    public Long getId() {
++        return id;
++    }
++
++    public void setId(Long id) {
++        this.id = id;
++    }
++
++    public String getTitle() {
++        return title;
++    }
++
++    public String getIsbn() {
++        return isbn;
++    }
++
++    public String getPublisher() {
++        return publisher;
++    }
++
++    public Set<Author> getAuthors() {
++        return authors;
++    }
++
++    public void setTitle(String title) {
++        this.title = title;
++    }
++
++    public void setIsbn(String isbn) {
++        this.isbn = isbn;
++    }
++
++    public void setPublisher(String publisher) {
++        this.publisher = publisher;
++    }
++
++    public void setAuthors(Set<Author> authors) {
++        this.authors = authors;
++    }
++
++    @Override
++    public boolean equals(Object o) {
++        if (this == o) return true;
++        if (o == null || getClass() != o.getClass()) return false;
++        Book book = (Book) o;
++        return Objects.equals(id, book.id);
++    }
++
++    @Override
++    public int hashCode() {
++        return Objects.hash(id);
++    }
++
++    @Override
++    public String toString() {
++        return "Book{" +
++                "id=" + id +
++                ", title='" + title + '\'' +
++                ", isbn='" + isbn + '\'' +
++                ", publisher='" + publisher + '\'' +
++                ", authors=" + authors +
++                '}';
++    }
++}
+Index: src/main/java/guru/springframework/spring5webapp/model/Author.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/guru/springframework/spring5webapp/model/Author.java	(date 1545050682482)
++++ src/main/java/guru/springframework/spring5webapp/model/Author.java	(date 1545050682482)
+@@ -0,0 +1,88 @@
++package guru.springframework.spring5webapp.model;
++
++import javax.persistence.*;
++import java.util.HashSet;
++import java.util.Objects;
++import java.util.Set;
++
++@Entity
++public class Author {
++    @Id
++    @GeneratedValue(strategy =  GenerationType.AUTO)
++    private Long id;
++    private String firstName;
++    private String lastName;
++
++    @ManyToMany(mappedBy = "authors")
++    private Set<Book> books = new HashSet<>();
++
++    public  Author(){
++
++    }
++
++    public  Author(String firstName, String lastName){
++        this.firstName = firstName;
++        this.lastName = lastName;
++    }
++
++    public  Author(String firstName, String lastName, Set<Book> books){
++        this.firstName = firstName;
++        this.lastName = lastName;
++        this.books = books;
++    }
++
++    public Long getId() {
++        return id;
++    }
++
++    public void setId(Long id) {
++        this.id = id;
++    }
++
++    public void setFirstName(String firstName) {
++        this.firstName = firstName;
++    }
++
++    public void setLastName(String lastName) {
++        this.lastName = lastName;
++    }
++
++    public void setBooks(Set<Book> books) {
++        this.books = books;
++    }
++
++    public String getFirstName() {
++        return firstName;
++    }
++
++    public String getLastName() {
++        return lastName;
++    }
++
++    public Set<Book> getBooks() {
++        return books;
++    }
++
++    @Override
++    public boolean equals(Object o) {
++        if (this == o) return true;
++        if (o == null || getClass() != o.getClass()) return false;
++        Author author = (Author) o;
++        return Objects.equals(id, author.id);
++    }
++
++    @Override
++    public int hashCode() {
++        return Objects.hash(id);
++    }
++
++    @Override
++    public String toString() {
++        return "Author{" +
++                "id=" + id +
++                ", firstName='" + firstName + '\'' +
++                ", lastName='" + lastName + '\'' +
++                ", books=" + books +
++                '}';
++    }
++}
+Index: src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1254
+===================================================================
+--- src/main/resources/application.properties	(date 1545047764738)
++++ src/main/resources/application.properties	(date 1545047764738)
+@@ -0,0 +1,2 @@
++spring.h2.console.enabled=true
++server.port=2525
+\ No newline at end of file
